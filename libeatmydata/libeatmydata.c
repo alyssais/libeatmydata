@@ -35,6 +35,12 @@
 #define CHECK_FILE "/tmp/eatmydata"
 */
 
+#ifdef HAVE_OFF64_T
+typedef off64_t sync_file_range_off;
+#else
+typedef off_t sync_file_range_off;
+#endif
+
 typedef int (*libc_open_t)(const char*, int, ...);
 #ifdef HAVE_OPEN64
 typedef int (*libc_open64_t)(const char*, int, ...);
@@ -44,7 +50,7 @@ typedef int (*libc_sync_t)(void);
 typedef int (*libc_fdatasync_t)(int);
 typedef int (*libc_msync_t)(void*, size_t, int);
 #ifdef HAVE_SYNC_FILE_RANGE
-typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
+typedef int (*libc_sync_file_range_t)(int, sync_file_range_off, sync_file_range_off, unsigned int);
 #endif
 #ifdef HAVE_SYNCFS
 typedef int (*libc_syncfs_t)(int);
@@ -259,7 +265,8 @@ int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 }
 
 #ifdef HAVE_SYNC_FILE_RANGE
-int LIBEATMYDATA_API sync_file_range(int fd, off64_t offset, off64_t nbytes,
+int LIBEATMYDATA_API sync_file_range(int fd, sync_file_range_off offset,
+				     sync_file_range_off nbytes,
 				     unsigned int flags)
 {
 	if (eatmydata_is_hungry()) {

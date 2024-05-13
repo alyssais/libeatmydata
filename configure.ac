@@ -37,6 +37,8 @@ AC_CHECK_HEADERS_ONCE(pthread.h)
 AC_CHECK_SIZEOF(mode_t)
 AC_CHECK_SIZEOF(int)
 
+AC_CHECK_TYPES([off64_t])
+
 AC_CHECK_TYPE(pthread_barrier_t,,,[
   #ifdef HAVE_PTHREAD_H
   #include <pthread.h>
